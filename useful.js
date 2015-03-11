@@ -68,6 +68,8 @@ function createUser(userName)
 			groups: []
 		}
 	);
+	
+	console.log("The user "+userName+" has been created.");
 }
 
 function editUserProfile(userName, description)
@@ -81,9 +83,11 @@ function editUserProfile(userName, description)
 			description: description
 		}
 	);
+	
+	console.log("The user "+userName+"'s profile has been edited.");
 }
 
-function editGroupForUser(userName, groupName, notify)
+function editGroupForUser(userName, groupName, notify) /* notify should hould be boolean */
 {
 	var userId = getIdentifier(userName);
 	var user_Id = getIdAsUser(userName);
@@ -95,6 +99,8 @@ function editGroupForUser(userName, groupName, notify)
 			notify: notify
 		}
 	);
+	
+	console.log(userName+"'s notification status for the group has been changed to "+notify+".");
 }
 
 function createGroup(groupName, type) /* Type should be Public or Private */
@@ -112,6 +118,8 @@ function createGroup(groupName, type) /* Type should be Public or Private */
 			users: []
 		}
 	)
+	
+	console.log("The group "+groupName+" has been created.");
 }
 
 function editGroupProfile(groupName, type, description) /* Type should be Public or Private */
@@ -128,6 +136,8 @@ function editGroupProfile(groupName, type, description) /* Type should be Public
 			type: type
 		}
 	);
+	
+	console.log("The group "+groupName+"'s description has been changed.");
 }
 
 function addUserToGroup(userName, groupName)
