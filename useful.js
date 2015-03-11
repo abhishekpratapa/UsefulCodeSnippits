@@ -53,16 +53,17 @@ $(document).ready(function(){
 
 /* Agora database functions for use with MongoDB as JSON */
 
-Agora = new Mongo().Mongo.getDB(Agora); //I think?
+/* Agora database functions for use with MongoDB as JSON */
+
+var Agora = new Mongo().getDB("AgoraDB"); //I think?
 
 function createUser(userName)
 {
 	var userId = getIdentifier(userName);
-	var user_Id = getIdAsUser(userName);
+	
 	Agora.allUsers.insert(
 		{
-			_id: user_Id,
-			user_id: userId,
+			userid: userId,
 			name: userName,
 			description: "",
 			groups: []
@@ -75,10 +76,9 @@ function createUser(userName)
 function editUserProfile(userName, description)
 {
 	var userId = getIdentifier(userName);
-	var user_Id = getIdAsUser(userName);
 	
 	Agora.allUsers.update(
-		{ _id: user_Id },
+		{ user_id: userId },
 		{
 			description: description
 		}
@@ -90,11 +90,10 @@ function editUserProfile(userName, description)
 function editGroupForUser(userName, groupName, notify) /* notify should hould be boolean */
 {
 	var userId = getIdentifier(userName);
-	var user_Id = getIdAsUser(userName);
 	var groupId = getIdentifier(groupName);
-	var group_Id = getIdAsGroup(groupName);
 	
-	Agora.allUsers.user_Id.groups.update(
+	Agora.allUsers.find( {userid: userId} ).groups.update(
+		{ groupid: groupId },
 		{
 			notify: notify
 		}
@@ -106,18 +105,16 @@ function editGroupForUser(userName, groupName, notify) /* notify should hould be
 function createGroup(groupName, type) /* Type should be Public or Private */
 {
 	var groupId = getIdentifier(groupName);
-	var group_Id = getIdAsGroup(groupName);
 	
 	Agora.allGroups.insert(
 		{
-			_id: group_Id,
 			group_id: groupId,
 			name = groupName,
 			description: "",
 			type: type,
 			users: []
 		}
-	)
+	);
 	
 	console.log("The group "+groupName+" has been created.");
 }
@@ -125,12 +122,11 @@ function createGroup(groupName, type) /* Type should be Public or Private */
 function editGroupProfile(groupName, type, description) /* Type should be Public or Private */
 {
 	var groupId = getIdentifier(groupName);
-	var group_Id = getIdAsGroup(groupName);
 	
 	/*if group is private then there is some other shit that needs to happen, apparently?*/
 	
 	Agora.allGroups.update(
-		{ _id: group_Id }
+		{ group_id: groupId }
 		{
 			description: description
 			type: type
@@ -145,24 +141,20 @@ function addUserToGroup(userName, groupName)
 	/*get unique id from facebook or just generate from the user's name somehow?*/
 	
 	var userId = getIdentifier(userName);
-	var user_Id = getIdAsUser(userName);
 	var groupId = getIdentifier(groupName);
-	var group_Id = getIdAsGroup(groupName);
 	
 	/*if group is private then there is some other shit that needs to happen, apparently?*/
 	
-	Agora.allUsers.user_Id.groups.insert(
+	Agora.allUsers.find( {userid: userId} ).groups.insert(
 		{
-			_id: groupId,
-			group_id: group_Id,
+			group_id: groupId,
 			name: groupName,
 			notify: true
 		}
 	);
-	Agora.allGroups.group_Id.users.insert(
+	Agora.allGroups.find( {groupid: groupId} ).users.insert(
 		{
-			_id: userId,
-			user_id: user_Id,
+			user_id: userId,
 			name: userName
 		}
 	);
@@ -173,16 +165,14 @@ function addUserToGroup(userName, groupName)
 function removeUserFromGroup(userName, groupName)
 {
 	var userId = getIdentifier(userName);
-	var user_Id = getIdAsUser(userName);
 	var groupId = getIdentifier(groupName);
-	var group_Id = getIdAsGroup(groupName);
 	
-	Agora.allUsers.user_Id.groups.remove(
-		{ _id: groupId },
+	Agora.allUsers.find( {userid: userId} ).groups.remove(
+		{ group_id: groupId },
 		{ justOne: true }
 	);
-	Agora.allGroups.group_Id.users.remove(
-		{ _id: userId },
+	Agora.allGroups.find( {groupid: groupId} ).users.remove(
+		{ user_id: userId },
 		{ justOne: true }
 	);
 	
@@ -193,24 +183,6 @@ function removeUserFromGroup(userName, groupName)
 
 function getIdentifier(name)
 {
-	return name.trim().toLowerCase().replace(" ", "_")
+	return name.trim().toLowerCase().replace(" ", "_");
 }
-
-function getIdAsUser(name)
-{
-	var id = getIdentifier(name);
-	var userString = "user_"
-	return userString.concat(id);
-}
-
-function getIdAsGroup(name)
-{
-	var id = getIdentifier(name);
-	var groupString = "group_";
-	return groupString.concat(id);
-}
-
-
-
-
 
