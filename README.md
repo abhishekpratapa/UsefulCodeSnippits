@@ -1,2 +1,5 @@
 # UsefulCodeSnippits
-This is a repository to store any useful codes (such as picture upload).
+
+1) Center shit on a screen
+2) Find an optimum logo size on a screen
+3) Create a topbar on any website
