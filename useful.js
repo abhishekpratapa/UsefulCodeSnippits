@@ -49,3 +49,158 @@ $(document).ready(function(){
         	param.css("width", "100%");
         }
 });
+
+
+/* Agora database functions for use with MongoDB as JSON */
+
+Agora = new Mongo().Mongo.getDB(Agora); //I think?
+
+function createUser(userName)
+{
+	var userId = getIdentifier(userName);
+	var user_Id = getIdAsUser(userName);
+	Agora.allUsers.insert(
+		{
+			_id: user_Id,
+			user_id: userId,
+			name: userName,
+			description: "",
+			groups: []
+		}
+	);
+}
+
+function editUserProfile(userName, description)
+{
+	var userId = getIdentifier(userName);
+	var user_Id = getIdAsUser(userName);
+	
+	Agora.allUsers.update(
+		{ _id: user_Id },
+		{
+			description: description
+		}
+	);
+}
+
+function editGroupForUser(userName, groupName, notify)
+{
+	var userId = getIdentifier(userName);
+	var user_Id = getIdAsUser(userName);
+	var groupId = getIdentifier(groupName);
+	var group_Id = getIdAsGroup(groupName);
+	
+	Agora.allUsers.user_Id.groups.update(
+		{
+			notify: notify
+		}
+	);
+}
+
+function createGroup(groupName, type) /* Type should be Public or Private */
+{
+	var groupId = getIdentifier(groupName);
+	var group_Id = getIdAsGroup(groupName);
+	
+	Agora.allGroups.insert(
+		{
+			_id: group_Id,
+			group_id: groupId,
+			name = groupName,
+			description: "",
+			type: type,
+			users: []
+		}
+	)
+}
+
+function editGroupProfile(groupName, type, description) /* Type should be Public or Private */
+{
+	var groupId = getIdentifier(groupName);
+	var group_Id = getIdAsGroup(groupName);
+	
+	/*if group is private then there is some other shit that needs to happen, apparently?*/
+	
+	Agora.allGroups.update(
+		{ _id: group_Id }
+		{
+			description: description
+			type: type
+		}
+	);
+}
+
+function addUserToGroup(userName, groupName)
+{
+	/*get unique id from facebook or just generate from the user's name somehow?*/
+	
+	var userId = getIdentifier(userName);
+	var user_Id = getIdAsUser(userName);
+	var groupId = getIdentifier(groupName);
+	var group_Id = getIdAsGroup(groupName);
+	
+	/*if group is private then there is some other shit that needs to happen, apparently?*/
+	
+	Agora.allUsers.user_Id.groups.insert(
+		{
+			_id: groupId,
+			group_id: group_Id,
+			name: groupName,
+			notify: true
+		}
+	);
+	Agora.allGroups.group_Id.users.insert(
+		{
+			_id: userId,
+			user_id: user_Id,
+			name: userName
+		}
+	);
+	
+	console.log(userName+" has been added to "+groupName+".");
+}
+
+function removeUserFromGroup(userName, groupName)
+{
+	var userId = getIdentifier(userName);
+	var user_Id = getIdAsUser(userName);
+	var groupId = getIdentifier(groupName);
+	var group_Id = getIdAsGroup(groupName);
+	
+	Agora.allUsers.user_Id.groups.remove(
+		{ _id: groupId },
+		{ justOne: true }
+	);
+	Agora.allGroups.group_Id.users.remove(
+		{ _id: userId },
+		{ justOne: true }
+	);
+	
+	console.log(userName+" has been removed from "+groupName+".");
+}
+
+/* Auxiliary functions */
+
+function getIdentifier(name)
+{
+	return name.trim().toLowerCase().replace(" ", "_")
+}
+
+function getIdAsUser(name)
+{
+	var id = getIdentifier(name);
+	var userString = "user_"
+	return userString.concat(id);
+}
+
+function getIdAsGroup(name)
+{
+	var id = getIdentifier(name);
+	var groupString = "group_";
+	return groupString.concat(id);
+}
+
+
+
+
+
