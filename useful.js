@@ -48,6 +48,35 @@ $(document).ready(function(){
         	param.css("left", "0px");
         	param.css("width", "100%");
         }
+        
+        function optimalSizeImageBackground(param){
+	  	$(param).css("position", "absolute");
+	    	var width = $(window).width();
+	    	var height =  $(window).height();
+	    	var widthimage = $(param).width();
+	    	var heightimage = $(param).height();
+	    	if((width/height) > (widthimage/heightimage)) {
+	    		$(param).css("width", width);
+	    		$(param).css("height", "auto");
+	    		$(param).css("top", -1*(($(param).height()-height)/2));
+	    	}else{
+	    		$(param).css("height", height);
+	    		$(param).css("width", "auto");
+	    		$(param).css("left", -1*(($(param).width()-width)/2));
+	    	}
+	}
+	
+	function populateArr(urlSent, key, long, lat) {
+	    	$.ajax({
+			url: urlSent, //whatever thi wants
+			type: "GET", 
+			data: {api_key: key, longitude: long, latitude: lat}, 
+			dataType: "text", 
+			success: function(response){ 
+				//what you want
+			}
+	   	});
+	}
 });
 
 
