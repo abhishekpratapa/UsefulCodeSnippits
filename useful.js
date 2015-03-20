@@ -2,12 +2,14 @@
 //to create a topBar a particular object pass $([object refrence])
 
 $(document).ready(function(){
+	//center something on the screen
         function centerScreen(param){
 		param.css("position", "absolute");
 		param.css("top", (($(window).height()-param.height())/2));
 		param.css("left", (($(window).width()-param.width())/2));
 	}
-				
+		
+	//to get the optimum size for a logo use this function		
 	function optimumLogoSize(param, scaleFactor){
 		var width = $(window).height();
 		var height = $(window).width();
@@ -39,7 +41,8 @@ $(document).ready(function(){
 		}
 					
 	}
-  
+  	
+  	//designing the css for a top bar
         function topBar(param){
         	param.css("position", "fixed");
         	$("body").css("border", "0px");
@@ -49,6 +52,7 @@ $(document).ready(function(){
         	param.css("width", "100%");
         }
         
+        //the optimum size for the background of the image
         function optimalSizeImageBackground(param){
 	  	$(param).css("position", "absolute");
 	    	var width = $(window).width();
@@ -66,6 +70,7 @@ $(document).ready(function(){
 	    	}
 	}
 	
+	//populate an array AJAX using a GET script
 	function populateArr(urlSent, key, long, lat) {
 	    	$.ajax({
 			url: urlSent, //whatever thi wants
@@ -77,4 +82,7 @@ $(document).ready(function(){
 			}
 	   	});
 	}
+	//*******************************START OF AI ALGOTITHIM********************************************//
+	
+	
 });
